@@ -1,5 +1,5 @@
 import requests
-import pandas as pd
+import json
 
 # TODO paginación (no es necesario pero suma)
 
@@ -26,5 +26,5 @@ for resultado in r.json()["resultados"]:
     if response_medicamento.status_code == 200:
         medicamentos.append(response_medicamento.json())
 
-df_medicamentos = pd.DataFrame(medicamentos)
-print(df_medicamentos.columns)
+with open("medicamentos_raw.json", "w", encoding="utf-8") as f:
+    json.dump(medicamentos, f, ensure_ascii=False, indent=2)
