@@ -1,30 +1,62 @@
 import requests
 import json
 
-# TODO paginación (no es necesario pero suma)
 
-url = "https://cima.aemps.es/cima/rest/buscarEnFichaTecnica?pagina=1"
+def peticion_ficha_tecnica(num_pagina: int) -> requests.Response:
+    '''Devuelve la respuesta de la petición de la ficha técnica dado el número de página'''
 
-#Este es el body del POST request. Estamos preguntando "dime todos los medicamentos para tratar la migraña".
-payload = [
-    {
-        "seccion": "4.1",
-        "texto": "migraña",
-        "contiene": 1
-    }
-]
+    url = f"https://cima.aemps.es/cima/rest/buscarEnFichaTecnica?pagina={str(num_pagina)}"
+    payload = [
+        {
+            "seccion": "4.1",
+            "texto": "migraña",
+            "contiene": 1
+        }
+    ]
 
-r = requests.post(url, json=payload)
+    respuesta_ficha = requests.post(url, json=payload)
+    if respuesta_ficha.status_code == 200:
+        return requests.post(url, json=payload)
+    
+    respuesta_ficha.raise_for_status()
 
-url_medicamentos = "https://cima.aemps.es/cima/rest/medicamento"
-medicamentos = []
-for resultado in r.json()["resultados"]:
-    response_medicamento = requests.get(url_medicamentos, params={"nregistro": resultado["nregistro"]})
-    #Este es un GET request, que no tiene body. Necesita un parámetro (nregistro).
-    #Aquí estamos diciendo "para cada medicamento, dame todos sus datos".
+def incluir_medicamentos(medicamentos, resultados) -> None:
+    '''Añade a la lista de medicamentos los medicamentos que se encuentren en los resultados de la ficha técnica'''
 
-    if response_medicamento.status_code == 200:
-        medicamentos.append(response_medicamento.json())
+    url_medicamentos = "https://cima.aemps.es/cima/rest/medicamento"
 
-with open("medicamentos_raw.json", "w", encoding="utf-8") as f:
-    json.dump(medicamentos, f, ensure_ascii=False, indent=2)
+    for resultado in resultados:
+        response_medicamento = requests.get(url_medicamentos, params={"nregistro": resultado["nregistro"]})
+
+        if response_medicamento.status_code == 200:
+            medicamentos.append(response_medicamento.json())
+        else:
+            raise response_medicamento.raise_for_status()
+
+
+if __name__ == "__main__":
+    pagina: int = 1
+    medicamentos = []
+    total_registros: int = 0
+
+    # Bucle de peticiones con paginación
+    while True:
+        # Obtener ficha técnica y sus resultados
+        ficha_tecnica = peticion_ficha_tecnica(pagina).json()
+        resultados = ficha_tecnica["resultados"]
+
+        # Valores para paginación
+        tamano_pagina: int = ficha_tecnica["tamanioPagina"]
+        total_medicamentos: int = ficha_tecnica["totalFilas"]
+        total_registros += len(resultados)
+
+        incluir_medicamentos(medicamentos, resultados)
+
+        if total_registros >= total_medicamentos:
+            break
+
+        pagina += 1
+
+    # Exportar medicamentos con todas las columnas a json
+    with open("medicamentos_raw.json", "w", encoding="utf-8") as f:
+        json.dump(medicamentos, f, ensure_ascii=False, indent=2)
