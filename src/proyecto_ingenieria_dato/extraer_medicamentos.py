@@ -52,9 +52,9 @@ if __name__ == "__main__":
 
         incluir_medicamentos(medicamentos, resultados)
 
+        # Control de paginación
         if total_registros >= total_medicamentos:
             break
-
         pagina += 1
 
     # Exportar medicamentos con todas las columnas a json
