@@ -20,3 +20,8 @@ proyecto-ingenieria-dato = "proyecto_ingenieria_dato:main"
 [build-system]
 requires = ["uv_build>=0.12.16,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.31.0",
+]
