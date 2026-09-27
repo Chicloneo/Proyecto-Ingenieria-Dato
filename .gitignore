@@ -18,3 +18,5 @@ __pycache__/
 data/
 *.xlsx
 *.json
+
+.DS_Store
