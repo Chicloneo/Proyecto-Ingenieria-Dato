@@ -37,6 +37,7 @@ def incluir_medicamentos(medicamentos, resultados) -> None:
 def export_to_json(filename: str, medicamentos: list[dict]) -> None:
     '''Exporta la lista de medicamentos a json en el directorio data'''
 
+    path.parent.mkdir(parents=True, exist_ok=True)
     path = Path(__file__).resolve().parent.parent.joinpath('data', filename)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(medicamentos, f, ensure_ascii=False, indent=2)
