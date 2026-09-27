@@ -42,7 +42,7 @@ def export_to_json(filename: str, medicamentos: list[dict]) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(medicamentos, f, ensure_ascii=False, indent=2)
 
-if __name__ == "__main__":
+def main():
     pagina: int = 1
     medicamentos = []
     total_registros: int = 0
@@ -67,3 +67,6 @@ if __name__ == "__main__":
 
     # Exportar medicamentos con todas las columnas a json
     export_to_json("medicamentos_raw.json", medicamentos)
+
+if __name__ == "__main__":
+    main()
