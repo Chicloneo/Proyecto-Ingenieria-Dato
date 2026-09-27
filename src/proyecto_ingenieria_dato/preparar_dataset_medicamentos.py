@@ -14,12 +14,11 @@ for medicamento in medicamentos_columnas_todas:
         "labtitular": medicamento.get("labtitular"),
         "labcomercializador": medicamento.get("labcomercializador"),
         "cn": medicamento.get("presentaciones")[0].get("cn"),
-        "forma_farmaceutica_simplificada": medicamento.get("formaFarmaceuticaSimplificada"),
+        "forma_farmaceutica_simplificada": medicamento.get("formaFarmaceuticaSimplificada").get("nombre"),
 
         "estado_aut": pd.to_datetime(medicamento.get("estado").get("aut"), unit='ms', errors='coerce'),
         "estado_rev": pd.to_datetime(medicamento.get("estado").get("rev"), unit='ms', errors='coerce'),
 
-        # Verificar formato (via_administracion1, via_administracion2, ...)
         "vias_administracion": " ,".join(via.get("nombre") for via in medicamento.get("viasAdministracion")),
 
         # False en caso de que no exista para prevenir errores de conversion
@@ -55,4 +54,4 @@ for medicamento in medicamentos_columnas_todas:
     medicamentos_clean.append(medicamento_clean)
 
 df_medicamentos = pd.DataFrame(medicamentos_clean)
-pd.DataFrame.to_excel(df_medicamentos, "medicamentos.xlsx")
+pd.DataFrame.to_excel(df_medicamentos, "medicamentos.xlsx", index=False)
