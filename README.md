@@ -1,49 +1,62 @@
 # Proyecto de ingeniería del dato
 
-## HU-2: indicadores de las fichas técnicas
+27 de Septiembre de 2026.
 
-Instalar las dependencias con `uv sync`. Desde la raíz del proyecto, usar el
-Excel obtenido en HU-1:
+Integrantes: Gonzalo Carrasco, Rafael Sánchez Largo, Santiago Lillo Macías.
 
-Si todavía no se han generado los datos de HU-1, ejecutar primero, en este orden:
+Para obtener el resultado global de toda la práctica, debe ejecutarse el archivo `orquestador.py`, dentro de `src/proyecto_ingenieria_dato`. Esto va a crear un archivo `catalogo_enriquecido.xlsx` con los datos finales.
 
-```bash
-uv run python src/proyecto_ingenieria_dato/extraer_medicamentos.py
-uv run python src/proyecto_ingenieria_dato/preparar_dataset_medicamentos.py
-```
+En la redacción del README no han sido utilizadas herramientas de IA.
 
-El primer script genera `medicamentos_raw.json` y el segundo, `medicamentos.xlsx`.
-A continuación, ejecutar HU-2:
+## Enfermedad
+Migraña
 
-```bash
-uv run python -m proyecto_ingenieria_dato.enriquecer_fichas_tecnicas
-```
+## Memoria
+En este README se van a responder a las preguntas proporcionadas en la plantilla _Sprint_ del campus virtual.
 
-Por defecto lee `medicamentos.xlsx` y genera `medicamentos_hu2.xlsx`.
-Para utilizar otras rutas:
+## Introducción
 
-```bash
-uv run python -m proyecto_ingenieria_dato.enriquecer_fichas_tecnicas --entrada datos/medicamentos.xlsx --salida datos/medicamentos_hu2.xlsx
-```
+EL objetivo de este trabajo es obtener unos datos concretos sobre los medicamentos para combatir una determinada enfermedad, que en nuestro caso es la migraña. 
 
-Conserva las filas y columnas de entrada y añade:
+### ¿Cómo lo hacemos?
 
-| Columna | Cálculo |
-| --- | --- |
-| `volumen_informativo_seguridad` | Palabras del contenido de 4.4, sin su título y hasta el siguiente encabezado del mismo nivel o superior. Incluye los subtítulos internos. |
-| `complejidad_desglose_clinico` | Número de etiquetas `<table>` del HTML completo. |
-| `indicador_riesgo_severo` | Apariciones completas de «grave» y «graves» en el texto del documento, sin distinguir mayúsculas. |
-| `error_scraping` | Incidencia de descarga o sección ausente; vacío cuando los tres indicadores se han calculado. |
+A través de diferentes métodos, como peticiones a APIs o web-scraping.
 
-Se cuentan como palabras las secuencias Unicode de letras, números o guiones
-bajos (`\b\w+\b`); la puntuación y los guiones separan palabras. Se excluyen
-scripts, estilos, plantillas y metadatos. Los indicadores que no puedan calcularse
-quedan vacíos, para distinguirlos de un recuento real de cero. Las URL repetidas
-se descargan una sola vez por ejecución. Hay tiempo límite y reintentos para
-errores temporales. El fichero de HU-1 no se sobrescribe.
+### ¿Por qué es importante este tipo de problema?
 
-Pruebas locales, sin acceso a internet:
+Porque en muchas ocasiones necesitamos hacer __Data Extraction__. En este caso, tenemos los datos (CIMA, ministerio, ...), pero "desperdigados". Es decir, debemos obtenerlos de varias fuentes, depurarlos, y unificarlos en un archivo `.xlsx` final.
 
-```bash
-uv run python -m unittest discover -s tests
-```
+
+## Metodología
+
+### Herramientas utilizadas
+
+- IDE: VS Code
+- Lenguaje: Python
+- Bibliotecas: requests, json, pathlib, pandas, re, BeautifulSoup
+
+### Pruebas realizadas
+
+Para realizar pequeñas pruebas y verificar el funcionamiento de los scripts, nos hemos apoyado en el uso de jupyter notebooks, de manera que podíamos comprobar cada data extraction con pequeños ejemplos, como puede ser un solo medicamento.
+
+### Resultados
+
+Al ejecutar este comando
+
+![Terminal](Images/terminal.png)
+
+Se crean 4 archivos de datos
+
+![Datos](Images/datos.png)
+
+Una visualización parcial de `catalogo_enriquecido.xlsx` es la siguiente
+
+![Excel](Images/excel.png)
+
+### Discusión
+
+Los resultados finalmente han sido los esperados. Sin embargo, sí hubo algún conflicto al inicio del proyecto. Por ejemplo, al inspeccionar el dataframe y acceder a sus datos de manera equivocada, lo cual se solucionó accediendo a la documentación de librerías como pandas.
+
+## Conclusión
+
+Este trabajo va a ser vital tanto en la asignatura como en el máster, debido a su posibilidad de generalización a cualquier otro caso (no solamente medicamentos) y de automatización de la recogida de datos en cualquier proyecto de otras asignaturas (y por supuesto en el mundo profesional). Naturalmente, habrá veces en las que no podremos obtener los datos deseados únicamente con este método. No obstante, esto supone una herramienta nueva para la extracción de los mismos. Esperamos aprender nuevos métodos en todo el ciclo ETL/ELT.
