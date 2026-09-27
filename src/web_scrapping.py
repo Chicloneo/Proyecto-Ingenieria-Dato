@@ -15,10 +15,12 @@ Workflow (flujo de trabajo):
 
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 import re
+from bs4 import BeautifulSoup
+from pathlib import Path
 
-ruta_excel = "medicamentos.xlsx"
+DATA_PATH = Path(__file__).resolve().parent.parent.joinpath('data')
+ruta_excel = DATA_PATH.joinpath("medicamentos.xlsx")
 
 df = pd.read_excel(ruta_excel) 
 
@@ -42,11 +44,12 @@ for index, row in df.iterrows():
     numero_de_tablas.append(len(lista_tablas))
 
     texto = texto.lower()
-    coincidencias = re.findall(r"\bgraves?\b", texto)
     #Esto ha sido con ayuda de la IA:
     # s? indica que la s es opcional (buscamos tanto "grave" como "graves")
     # \b: Asegura que sea la palabra completa (no queremos palabras como "agravamiento")
-    # Coincidencis devuelve una lista con las palabras "grave" o "graves" repetidas, según su orden de aparición.
+    coincidencias = re.findall(r"\bgraves?\b", texto)
+
+    # Coincidencias devuelve una lista con las palabras "grave" o "graves" repetidas, según su orden de aparición.
     contador_grave.append(len(coincidencias))
 
 # Los nombres de las columnas vienen indicados en el enunciado
@@ -54,4 +57,5 @@ df["Volumen_Informativo"] = longitudes_4_4 #Añadimos una columna al dataframe. 
 df["Complejidad_Desglose"] = numero_de_tablas
 df["Indicador_Riesgo"] = contador_grave
 
-df.to_excel("medicamentos_web_scrapping.xlsx", index=False)
+export_path = DATA_PATH.joinpath("medicamentos_web_scrapping.xlsx")
+df.to_excel(export_path, index=False)

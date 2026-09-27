@@ -1,1 +1,0 @@
-EL archivo principal a ejecutar es `web_scrapping.py`, pero este requiere un archivo `.xlsx` que se obtiene de `extraer_medicamentos.py` y `preparar_dataset_medicamentos.py`.

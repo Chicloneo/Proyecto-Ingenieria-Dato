@@ -1,8 +1,12 @@
 import pandas as pd
 import json
+from pathlib import Path
 
+DATA_PATH = Path(__file__).resolve().parent.parent.joinpath("data")
+JSON_PATH = DATA_PATH.joinpath("medicamentos_raw.json")
+EXPORT_PATH = DATA_PATH.joinpath("medicamentos.xlsx")
 
-with open("medicamentos_raw.json", "r", encoding="utf-8") as f:
+with open(JSON_PATH, "r", encoding="utf-8") as f:
     medicamentos_columnas_todas = json.load(f)
 
 medicamentos_clean = []
@@ -54,4 +58,4 @@ for medicamento in medicamentos_columnas_todas:
     medicamentos_clean.append(medicamento_clean)
 
 df_medicamentos = pd.DataFrame(medicamentos_clean)
-pd.DataFrame.to_excel(df_medicamentos, "medicamentos.xlsx", index=False)
+pd.DataFrame.to_excel(df_medicamentos, EXPORT_PATH, index=False)

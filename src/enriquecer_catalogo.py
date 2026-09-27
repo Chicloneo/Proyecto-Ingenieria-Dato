@@ -1,9 +1,13 @@
 import pandas as pd
+from pathlib import Path
+
+DATA_PATH = Path(__file__).resolve().parent.parent.joinpath('data')
 
 # Este url te descarga el csv directamente de la página del ministerio.
 url = "https://www.sanidad.gob.es/profesionales/nomenclator.do?metodo=buscarProductos&especialidad=%25%25%25&d-4015021-e=1&6578706f7274=1%20%C2%A"
 
-df_medicamentos = pd.read_excel("medicamentos_web_scrapping.xlsx")
+
+df_medicamentos = pd.read_excel(DATA_PATH.joinpath("medicamentos_web_scrapping.xlsx"))
 df_ministerio = pd.read_csv(url)
 
 columnas_anadir = [
@@ -23,4 +27,4 @@ df_final = pd.merge(
     how="left",  # Conservar filas del dataframe original de medicamentos
 )
 
-df_final.to_excel("df_final.xlsx")
+df_final.to_excel(DATA_PATH.joinpath("catalogo_enriquecido.xlsx"))

@@ -1,5 +1,6 @@
 import requests
 import json
+from pathlib import Path
 
 
 def peticion_ficha_tecnica(num_pagina: int) -> requests.Response:
@@ -33,6 +34,12 @@ def incluir_medicamentos(medicamentos, resultados) -> None:
         else:
             raise response_medicamento.raise_for_status()
 
+def export_to_json(filename: str, medicamentos: list[dict]) -> None:
+    '''Exporta la lista de medicamentos a json en el directorio data'''
+
+    path = Path(__file__).resolve().parent.parent.joinpath('data', filename)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(medicamentos, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
     pagina: int = 1
@@ -58,5 +65,4 @@ if __name__ == "__main__":
         pagina += 1
 
     # Exportar medicamentos con todas las columnas a json
-    with open("medicamentos_raw.json", "w", encoding="utf-8") as f:
-        json.dump(medicamentos, f, ensure_ascii=False, indent=2)
+    export_to_json("medicamentos_raw.json", medicamentos)
