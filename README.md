@@ -6,8 +6,6 @@ Integrantes: Gonzalo Carrasco, Rafael Sánchez Largo, Santiago Lillo Macías.
 
 Para obtener el resultado global de toda la práctica, debe ejecutarse el archivo `orquestador.py`, dentro de `src/proyecto_ingenieria_dato`. Esto va a crear un archivo `catalogo_enriquecido.xlsx` con los datos finales.
 
-En la redacción del README no han sido utilizadas herramientas de IA.
-
 ## Enfermedad
 Migraña
 
@@ -16,7 +14,7 @@ En este README se van a responder a las preguntas proporcionadas en la plantilla
 
 ## Introducción
 
-EL objetivo de este trabajo es obtener unos datos concretos sobre los medicamentos para combatir una determinada enfermedad, que en nuestro caso es la migraña. 
+El objetivo de este trabajo es obtener unos datos concretos sobre los medicamentos para combatir una determinada enfermedad, que en nuestro caso es la migraña. 
 
 ### ¿Cómo lo hacemos?
 

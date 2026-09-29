@@ -1,7 +1,7 @@
-import extraer_medicamentos
-import preparar_dataset_medicamentos
-import web_scrapping
-import enriquecer_catalogo
+import proyecto_ingenieria_dato.extraer_medicamentos as extraer_medicamentos
+import proyecto_ingenieria_dato.preparar_dataset_medicamentos as preparar_dataset_medicamentos
+import proyecto_ingenieria_dato.web_scrapping as web_scrapping
+import proyecto_ingenieria_dato.enriquecer_catalogo as enriquecer_catalogo
 
 def main():
     extraer_medicamentos.main()
