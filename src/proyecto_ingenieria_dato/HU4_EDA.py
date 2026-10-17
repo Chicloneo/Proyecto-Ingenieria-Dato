@@ -2,6 +2,7 @@ import pandas as pd
 from pandas import DataFrame
 from pathlib import Path
 import numpy as np
+from contracts import Medicamento
 
 COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "nregistro", 
@@ -93,9 +94,18 @@ def gestionar_fechas(df:DataFrame) -> DataFrame:
 
     return df
 
+def validar_filas(df:DataFrame) -> DataFrame:
+    for index, row in df.iterrows():
+        try:
+            Medicamento(**row.to_dict())
+        except Exception as e:
+            raise ValueError(f"Error al validar la fila {index+2}. Error: {e}")
+    return df
+
 def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     ruta_export = Path(ruta)
-    df.to_csv(ruta, index=False)
+    ruta_export.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(ruta_export, index=False)
 
 def main(ruta=RUTA_INPUT):
     df = leer_excel(ruta)
@@ -104,6 +114,7 @@ def main(ruta=RUTA_INPUT):
     df = normalizar_strings(df)
     df = gestionar_nulos(df)
     df = gestionar_fechas(df)
+    df = validar_filas(df)
     exportar_df(df)
 
 
