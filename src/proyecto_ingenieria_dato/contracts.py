@@ -1,10 +1,11 @@
-from pydantic import Field, ConfigDict, BaseModel
+from pydantic import Field, ConfigDict, BaseModel, field_validator
 from typing import Literal
 from datetime import datetime
 
 class Medicamento(BaseModel):
 
     model_config = ConfigDict(extra='forbid')
+
 
     nombre: str = Field(min_length=1, description="Nombre del medicamento.")
 

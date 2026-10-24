@@ -26,7 +26,7 @@ MAIN_DIR = Path(__file__).resolve().parent
 RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "HU-3.csv"
 #RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "catalogo_enriquecido.xlsx"
 
-#RUTA_FECHAS = "../data/medicamentos_web_scrapping.xlsx"
+RUTA_FECHAS = Path(MAIN_DIR).parent / "data" / "medicamentos_web_scrapping.xlsx"
 
 RUTA_EXPORT = Path(MAIN_DIR).parent / "data" / "HU4_EDA.csv"
 
@@ -90,11 +90,9 @@ def gestionar_nulos(df:DataFrame) -> DataFrame:
 
 def gestionar_fechas(df:DataFrame) -> DataFrame:
 
-    df_fechas = pd.read_csv(RUTA_INPUT)
-    # Antes era con RUTA_FECHAS, pero lo solucioné
+    df["estado_aut"] = pd.to_datetime(df["estado_aut"], unit="ms")
+    df["estado_rev"] = pd.to_datetime(df["estado_rev"], unit="ms")
 
-    df["estado_aut"] = df_fechas["estado_aut"].copy()
-    df["estado_rev"] = df_fechas["estado_rev"].copy()
     df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"])
 
     return df
@@ -103,6 +101,12 @@ def gestionar_dosis(df:DataFrame) -> DataFrame:
 
     df["dosis"] = df["dosis"].str.strip().str.split().str[0].str.replace(",", ".").astype(float)
     df = df.rename(columns={"dosis": "dosis (mg)"})
+
+    return df
+
+def gestionar_generico(df:DataFrame) -> DataFrame:
+
+    df["generico"] = df["generico"].astype(int)
 
     return df
 
@@ -118,7 +122,7 @@ def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     ruta_export = Path(ruta)
     ruta_export.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(ruta_export, index=False)
-    print("EDA de medicamentos en data/HU4_EDA")
+    print("Se ha realizado el EDA de medicamentos en data/HU4_EDA")
 
 
 
@@ -131,7 +135,8 @@ def main(ruta=RUTA_INPUT):
     df = normalizar_strings(df)
     df = gestionar_nulos(df)
     df = gestionar_fechas(df)
-    de = gestionar_dosis(df)
+    df = gestionar_dosis(df)
+    df = gestionar_generico(df)
 
     try:
         df = validar_filas(df)
