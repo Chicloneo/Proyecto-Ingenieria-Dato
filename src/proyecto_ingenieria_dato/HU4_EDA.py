@@ -2,7 +2,8 @@ import pandas as pd
 from pandas import DataFrame
 from pathlib import Path
 import numpy as np
-from contracts import Medicamento
+import sys
+from .contracts import Medicamento
 
 COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "nregistro", 
@@ -20,18 +21,21 @@ COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "Especial control médico"
 ]
 
-RUTA_INPUT = "../data/catalogo_enriquecido.xlsx"
+MAIN_DIR = Path(__file__).resolve().parent
 
-RUTA_FECHAS = "../data/medicamentos_web_scrapping.xlsx"
+RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "HU-3.csv"
+#RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "catalogo_enriquecido.xlsx"
 
-RUTA_EXPORT = "../data/HU4_EDA.csv"
+#RUTA_FECHAS = "../data/medicamentos_web_scrapping.xlsx"
+
+RUTA_EXPORT = Path(MAIN_DIR).parent / "data" / "HU4_EDA.csv"
 
 def leer_excel(ruta=RUTA_INPUT) -> DataFrame:
     ruta_input = Path(ruta)
     if not ruta_input.exists():
         raise FileNotFoundError(f"No se encontró la ruta '{ruta}'")
     
-    df = pd.read_excel(ruta_input, index_col = False)
+    df = pd.read_csv(ruta_input, index_col = False)
     return df
 
 def eliminar_columnas(df:DataFrame) -> DataFrame:
@@ -46,7 +50,7 @@ def normalizar_strings(df:DataFrame) -> DataFrame:
 
     df["forma_farmaceutica_simplificada"] = df["forma_farmaceutica_simplificada"].replace("SOLUCIÓN/SUSPENSIÓN ORAL", "SOLUCIÓN")
     df["forma_farmaceutica_simplificada"] = df["forma_farmaceutica_simplificada"].replace("COMPRIMIDO BUCODISPERSABLE/LIOTAB", "COMPRIMIDO BUCODISPERSABLE")
-    df["vias_administracion"] = df["vias_administracion"].replace("VÍA INTRAMUSCULAR ,VÍA INTRAVENOSA", "VÍA INTRAVENOSA")
+    df["vias_administracion"] = df["vias_administracion"].replace("VÍA INTRAMUSCULAR ,VÍA INTRAVENOSA", "VÍA INTRAMUSCULAR")
 
     return df
 
@@ -86,11 +90,19 @@ def gestionar_nulos(df:DataFrame) -> DataFrame:
 
 def gestionar_fechas(df:DataFrame) -> DataFrame:
 
-    df_fechas = pd.read_excel(RUTA_FECHAS)
+    df_fechas = pd.read_csv(RUTA_INPUT)
+    # Antes era con RUTA_FECHAS, pero lo solucioné
 
     df["estado_aut"] = df_fechas["estado_aut"].copy()
     df["estado_rev"] = df_fechas["estado_rev"].copy()
     df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"])
+
+    return df
+
+def gestionar_dosis(df:DataFrame) -> DataFrame:
+
+    df["dosis"] = df["dosis"].str.strip().str.split().str[0].str.replace(",", ".").astype(float)
+    df = df.rename(columns={"dosis": "dosis (mg)"})
 
     return df
 
@@ -99,23 +111,38 @@ def validar_filas(df:DataFrame) -> DataFrame:
         try:
             Medicamento(**row.to_dict())
         except Exception as e:
-            raise ValueError(f"Error al validar la fila {index+2}. Error: {e}")
-    return df
+            raise ValueError(f" Error al validar el lote. Error en el medicamento {df.get("nombre")[index]} \n \n {row}. \n \n Error: \n {e}")
+    return df 
 
 def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     ruta_export = Path(ruta)
     ruta_export.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(ruta_export, index=False)
+    print("EDA de medicamentos en data/HU4_EDA")
+
+
 
 def main(ruta=RUTA_INPUT):
     df = leer_excel(ruta)
     df = eliminar_columnas(df)
-    df = df.drop(df.columns[0], axis = 1)
+    #df = df.drop(df.columns[0], axis = 1) 
+    # esto era por si había que eliminar el unnamed:0, pero creo que ya no hace falta
+    # poner un if
     df = normalizar_strings(df)
     df = gestionar_nulos(df)
     df = gestionar_fechas(df)
-    df = validar_filas(df)
+    de = gestionar_dosis(df)
+
+    try:
+        df = validar_filas(df)
+    except ValueError as e: #porque hemos raiseado un ValueError
+        print(e, file=sys.stderr) 
+        return 2
+
     exportar_df(df)
+    
+    
+    
 
 
 if __name__ == "__main__":
