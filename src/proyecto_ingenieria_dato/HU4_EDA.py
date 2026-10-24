@@ -135,9 +135,6 @@ def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
 def main(ruta=RUTA_INPUT):
     df = leer_excel(ruta)
     df = eliminar_columnas(df)
-    #df = df.drop(df.columns[0], axis = 1) 
-    # esto era por si había que eliminar el unnamed:0, pero creo que ya no hace falta
-    # poner un if
     df = normalizar_strings(df)
     df = gestionar_nulos(df)
     df = gestionar_fechas(df)
