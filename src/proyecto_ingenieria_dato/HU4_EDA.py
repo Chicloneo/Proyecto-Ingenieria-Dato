@@ -1,3 +1,9 @@
+"""
+Desde la raíz del repo:
+uv run python -m proyecto_ingenieria_dato.HU4_EDA
+Esto genera un archivo HU4_EDA.csv en data/
+"""
+
 import pandas as pd
 from pandas import DataFrame
 from pathlib import Path
