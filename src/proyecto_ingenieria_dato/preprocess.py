@@ -1,7 +1,7 @@
 """
 Desde la raíz del repo:
-uv run python -m proyecto_ingenieria_dato.preprocess
-Esto genera un archivo HU4_EDA.csv en data/
+uv run python -m proyecto_ingenieria_dato.HU4_EDA
+Esto genera un archivo HU4_EDA.csv o excel en data/
 """
 
 import pandas as pd
@@ -51,7 +51,7 @@ def eliminar_columnas(df:DataFrame) -> DataFrame:
 def normalizar_strings(df:DataFrame) -> DataFrame:
 
     for nombre_columna in df.columns:
-        if df[nombre_columna].dtype == "object":
+        if df[nombre_columna].dtype == "str":
             df[nombre_columna] = df[nombre_columna].str.strip()
 
     df["forma_farmaceutica_simplificada"] = df["forma_farmaceutica_simplificada"].replace("SOLUCIÓN/SUSPENSIÓN ORAL", "SOLUCIÓN")
@@ -62,6 +62,13 @@ def normalizar_strings(df:DataFrame) -> DataFrame:
 
 def gestionar_nulos_duracion(df:DataFrame) -> DataFrame:
     df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace(pd.NA, 'NO')
+    return df
+
+def duracion_a_binario(df: DataFrame) -> DataFrame:
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("NO", 0)
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("SI", 1)
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].astype("int")
+
     return df
 
 def gestionar_nulos_estado(df:DataFrame) -> DataFrame:
@@ -98,8 +105,10 @@ def gestionar_fechas(df:DataFrame) -> DataFrame:
 
     df["estado_aut"] = pd.to_datetime(df["estado_aut"], unit="ms")
     df["estado_rev"] = pd.to_datetime(df["estado_rev"], unit="ms")
+    df["estado_aut"] = df["estado_aut"].dt.year
+    df["estado_rev"] = df["estado_rev"].dt.year
 
-    df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"])
+    df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"]).astype("int")
 
     return df
 
@@ -121,7 +130,8 @@ def validar_filas(df:DataFrame) -> DataFrame:
         try:
             Medicamento(**row.to_dict())
         except Exception as e:
-            raise ValueError(f" Error al validar el lote. Error en el medicamento {df.get('nombre')[index]} \n \n {row}. \n \n Error: \n {e}")
+            nombre = df.get("nombre")[index]
+            raise ValueError(f" Error al validar el lote. Error en el medicamento {nombre} \n \n {row}. \n \n Error: \n {e}")
     return df 
 
 def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
@@ -140,6 +150,7 @@ def main(ruta=RUTA_INPUT):
     df = gestionar_fechas(df)
     df = gestionar_dosis(df)
     df = gestionar_generico(df)
+    df = duracion_a_binario(df)
 
     try:
         df = validar_filas(df)
