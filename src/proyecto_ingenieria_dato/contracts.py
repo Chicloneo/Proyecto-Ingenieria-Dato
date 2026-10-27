@@ -59,6 +59,6 @@ class Medicamento(BaseModel):
         gt=0, alias="Precio venta al público con IVA", description="Precio de venta al público con IVA."
     )
 
-    tratamiento_de_larga_duración: Literal["NO", "SI"] = Field(
-        alias="Tratamiento de larga duración", description="Indica si es de larga duración."
+    tratamiento_de_larga_duración: int = Field(
+        ge=0, le=1, alias="Tratamiento de larga duración", description="Indica si es de larga duración."
     )

@@ -64,6 +64,13 @@ def gestionar_nulos_duracion(df:DataFrame) -> DataFrame:
     df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace(pd.NA, 'NO')
     return df
 
+def duracion_a_binario(df: DataFrame) -> DataFrame:
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("NO", 0)
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("SI", 1)
+    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].astype("int")
+
+    return df
+
 def gestionar_nulos_estado(df:DataFrame) -> DataFrame:
     moda = list(df["Estado"].mode())[0]
     df["Estado"] = df["Estado"].replace(pd.NA, moda)
@@ -98,8 +105,10 @@ def gestionar_fechas(df:DataFrame) -> DataFrame:
 
     df["estado_aut"] = pd.to_datetime(df["estado_aut"], unit="ms")
     df["estado_rev"] = pd.to_datetime(df["estado_rev"], unit="ms")
+    df["estado_aut"] = df["estado_aut"].dt.year
+    df["estado_rev"] = df["estado_rev"].dt.year
 
-    df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"])
+    df["estado_rev"] = df["estado_rev"].fillna(df["estado_aut"]).astype("int")
 
     return df
 
@@ -140,6 +149,7 @@ def main(ruta=RUTA_INPUT):
     df = gestionar_fechas(df)
     df = gestionar_dosis(df)
     df = gestionar_generico(df)
+    df = duracion_a_binario(df)
 
     try:
         df = validar_filas(df)
