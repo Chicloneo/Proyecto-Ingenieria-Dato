@@ -51,7 +51,7 @@ def eliminar_columnas(df:DataFrame) -> DataFrame:
 def normalizar_strings(df:DataFrame) -> DataFrame:
 
     for nombre_columna in df.columns:
-        if df[nombre_columna].dtype == "object":
+        if df[nombre_columna].dtype == "str":
             df[nombre_columna] = df[nombre_columna].str.strip()
 
     df["forma_farmaceutica_simplificada"] = df["forma_farmaceutica_simplificada"].replace("SOLUCIÓN/SUSPENSIÓN ORAL", "SOLUCIÓN")
