@@ -19,6 +19,7 @@ def main():
             "labtitular": medicamento.get("labtitular"),
             "labcomercializador": medicamento.get("labcomercializador"),
             "cn": medicamento.get("presentaciones")[0].get("cn"),
+            "dosis": medicamento.get("dosis"),
             "forma_farmaceutica_simplificada": medicamento.get("formaFarmaceuticaSimplificada").get("nombre"),
 
             "estado_aut": pd.to_datetime(medicamento.get("estado").get("aut"), unit='ms', errors='coerce'),

@@ -27,7 +27,7 @@ def main():
         how="left",  # Conservar filas del dataframe original de medicamentos
     )
 
-    df_final.to_excel(DATA_PATH.joinpath("catalogo_enriquecido.xlsx"))
+    df_final.to_excel(DATA_PATH.joinpath("catalogo_enriquecido.xlsx"), index=False)
 
 if __name__== "__main__":
     main()

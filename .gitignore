@@ -15,9 +15,7 @@ __pycache__/
 
 # --- Datos o configuraciones locales (Por seguridad/espacio) ---
 .env
-data/
-*.xlsx
-*.json
+src/data/.tmp/
 
 .DS_Store
 
