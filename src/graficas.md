@@ -52,6 +52,7 @@ La gráfica compara las fechas de autorización con las fechas de revisión disp
 ![Medicamentos según si son genéricos](graficas/medicamentos-segun-si-son-genericos.png)
 
 52 de los 70 registros están marcados como genéricos y 18 no. Esto muestra que los genéricos están ampliamente representados en la selección. La disponibilidad de genéricos suele ser posible cuando un medicamento puede comercializarse sin la exclusividad del producto original; aun así, el conjunto no incluye información de patentes ni fechas de vencimiento, por lo que no permite confirmar por qué cada producto es genérico.
+Un medicamento genérico es un medicamento con las mismas caracteristicas que el no generico en el que estan basados, se empiezan a producir cuando la patente del original ha caducado.
 
 ## Medicamentos según efecto sobre la conducción
 
