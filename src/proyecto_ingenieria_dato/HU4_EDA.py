@@ -134,18 +134,27 @@ def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     print("Se ha realizado el EDA de medicamentos en data/HU4_EDA")
 
 def one_hot_encoding(df):
-    text_columns = df.select_dtypes(include=['str']).columns
-    encoder = preprocessing.OneHotEncoder(handle_unknown='error', min_frequency=0.7)
+    text_columns = [
+        columna
+        for columna in df.select_dtypes(include=["str"]).columns
+        if columna != "nombre"
+    ]
+
+    encoder = preprocessing.OneHotEncoder(
+        handle_unknown="error",
+        min_frequency=0.7,
+    )
     encoded_data = encoder.fit_transform(df[text_columns])
 
     encoded_df = pd.DataFrame(
         encoded_data.toarray(),
-        columns=encoder.get_feature_names_out(text_columns)
+        columns=encoder.get_feature_names_out(text_columns),
+        index=df.index,
     )
 
     final_df = pd.concat(
         [df.drop(columns=text_columns), encoded_df],
-        axis=1
+        axis=1,
     )
     return final_df
 
