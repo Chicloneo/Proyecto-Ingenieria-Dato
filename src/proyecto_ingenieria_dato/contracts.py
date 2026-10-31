@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Medicamento(BaseModel):
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='allow') # Para permitir las columnas extra que crea el one-hot encoding
 
 
     nombre: str = Field(min_length=1, description="Nombre del medicamento.")
@@ -22,9 +22,9 @@ class Medicamento(BaseModel):
         description="Forma farmacéutica simplificada."
     )
 
-    estado_aut: datetime = Field(description="Fecha de autorización.")
+    estado_aut: int = Field(description="Fecha de autorización.")
 
-    estado_rev: datetime = Field(description="Fecha de revisión.")
+    estado_rev: int = Field(description="Fecha de revisión.")
 
     vias_administracion: Literal["VÍA ORAL", "VÍA NASAL", "VÍA INTRAMUSCULAR"] = Field(
         description="Vía de administración."
@@ -59,6 +59,4 @@ class Medicamento(BaseModel):
         gt=0, alias="Precio venta al público con IVA", description="Precio de venta al público con IVA."
     )
 
-    tratamiento_de_larga_duración: int = Field(
-        ge=0, le=1, alias="Tratamiento de larga duración", description="Indica si es de larga duración."
-    )
+    tratamiento_de_larga_duración: str = Literal["SI, NO"]

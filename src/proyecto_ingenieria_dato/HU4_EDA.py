@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 import sys
 from .contracts import Medicamento
+from sklearn import preprocessing
 
 COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "nregistro", 
@@ -62,13 +63,6 @@ def normalizar_strings(df:DataFrame) -> DataFrame:
 
 def gestionar_nulos_duracion(df:DataFrame) -> DataFrame:
     df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace(pd.NA, 'NO')
-    return df
-
-def duracion_a_binario(df: DataFrame) -> DataFrame:
-    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("NO", 0)
-    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].replace("SI", 1)
-    df["Tratamiento de larga duración"] = df["Tratamiento de larga duración"].astype("int")
-
     return df
 
 def gestionar_nulos_estado(df:DataFrame) -> DataFrame:
@@ -139,7 +133,21 @@ def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     df.to_csv(ruta_export, index=False)
     print("Se ha realizado el EDA de medicamentos en data/HU4_EDA")
 
+def one_hot_encoding(df):
+    text_columns = df.select_dtypes(include=['str']).columns
+    encoder = preprocessing.OneHotEncoder(handle_unknown='error', min_frequency=0.7)
+    encoded_data = encoder.fit_transform(df[text_columns])
 
+    encoded_df = pd.DataFrame(
+        encoded_data.toarray(),
+        columns=encoder.get_feature_names_out(text_columns)
+    )
+
+    final_df = pd.concat(
+        [df.drop(columns=text_columns), encoded_df],
+        axis=1
+    )
+    return final_df
 
 def main(ruta=RUTA_INPUT):
     df = leer_excel(ruta)
@@ -149,14 +157,14 @@ def main(ruta=RUTA_INPUT):
     df = gestionar_fechas(df)
     df = gestionar_dosis(df)
     df = gestionar_generico(df)
-    df = duracion_a_binario(df)
 
     try:
         df = validar_filas(df)
     except ValueError as e: #porque hemos raiseado un ValueError
         print(e, file=sys.stderr) 
         return 2
-
+    
+    df = one_hot_encoding(df) # No se valida ya que crea columnas nuevas en función de las agrupaciones realizadas
     exportar_df(df)
     
     
