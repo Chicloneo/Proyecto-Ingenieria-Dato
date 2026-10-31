@@ -38,23 +38,27 @@ class Medicamento(BaseModel):
 
     num_principios_activos: int = Field(ge=1, le=2, description="Número de principios activos.")
 
-    Volumen_Informativo: int = Field(ge=0, description="Volumen informativo asociado. "
-                                     "Número de palabras en la sección 4.4 de su ficha técnica.")
+    volumen_informativo: int = Field(ge=0, description="Volumen informativo asociado. "
+                                     "Número de palabras en la sección 4.4 de su ficha técnica.",
+                                     alias="Volumen_Informativo")
 
-    Complejidad_Desglose: int = Field(ge=0, description="Complejidad del desglose. "
-                                      "Número de tablas en su ficha técnica")
+    complejidad_desglose: int = Field(ge=0, description="Complejidad del desglose. "
+                                      "Número de tablas en su ficha técnica",
+                                      alias="Complejidad_Desglose")
 
-    Indicador_Riesgo: int = Field(ge=0, description="Indicador de riesgo. "
-                                  "Número de veces que aparece la palabra 'grave' o 'graves' en su ficha técnica")
+    indicador_riesgo: int = Field(ge=0, description="Indicador de riesgo. "
+                                  "Número de veces que aparece la palabra 'grave' o 'graves' en su ficha técnica",
+                                  alias="Indicador_Riesgo")
 
-    Estado: Literal["ALTA", "BAJA POR NO COMERCIALIZAR", "BAJA GENERAL", "SUSPENSION TEMPORAL GENERAL"] = Field(
-        description="Estado administrativo del medicamento."
+    estado: Literal["ALTA", "BAJA POR NO COMERCIALIZAR", "BAJA GENERAL", "SUSPENSION TEMPORAL GENERAL"] = Field(
+        description="Estado administrativo del medicamento.",
+        alias="Estado"
     )
 
-    Precio_venta_al_público_con_IVA: float = Field(
+    precio_venta_al_público_con_iva: float = Field(
         gt=0, alias="Precio venta al público con IVA", description="Precio de venta al público con IVA."
     )
 
-    Tratamiento_de_larga_duración: Literal["NO", "SI"] = Field(
-        alias="Tratamiento de larga duración", description="Indica si es de larga duración."
+    tratamiento_de_larga_duración: int = Field(
+        ge=0, le=1, alias="Tratamiento de larga duración", description="Indica si es de larga duración."
     )
