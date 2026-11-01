@@ -27,6 +27,32 @@ COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "Especial control médico"
 ]
 
+PRECIOS_MEDICAMENTOS_NULOS = {
+    "ALMOTRIPTAN CINFA 12,5 MG COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 19.53,
+    "NARAMIG 2,5 mg COMPRIMIDOS RECUBIERTOS CON PELICULA": 19.14,
+    "ALMOGRAN 12,5 mg COMPRIMIDOS RECUBIERTOS CON PELICULA": 29.30,
+    "AMIGNUL 12,5 mg COMPRIMIDOS RECUBIERTOS CON PELICULA": 29.30,
+    "BELOKEN RETARD 95 mg COMPRIMIDOS DE LIBERACION PROLONGADA": 2.50,
+    "CAFERGOT 1 mg/100 mg COMPRIMIDOS": 3.97,
+    "IBUKERN 600 MG COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 3.95,
+    "IBUKERN 600 MG SUSPENSION ORAL": 9.85,
+    "IBUPROFENO (ARGININA) VIR PHARMA 600 mg GRANULADO PARA SOLUCION ORAL EFG": 2.50,
+    "IBUPROFENO CLOVER 600 MG CAPSULAS BLANDAS": 2.97,
+    "TOPIRAMATO AUROVITAS SPAIN 100 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 36.62,
+    "TOPIRAMATO AUROVITAS SPAIN 200 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 73.25,
+    "TOPIRAMATO AUROVITAS SPAIN 25 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 9.16,
+    "TOPIRAMATO AUROVITAS SPAIN 50 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 18.31,
+    "TOPIRAMATO FARMALIDER 100 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 36.62,
+    "TOPIRAMATO FARMALIDER 200 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 73.25,
+    "TOPIRAMATO FARMALIDER 25 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 9.16,
+    "TOPIRAMATO FARMALIDER 50 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 18.31,
+    "TOPIRAMATO PENSA PHARMA 200 MG COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 73.25,
+    "TOPIRAMATO PENSA PHARMA 25 MG COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 9.16,
+    "TOPIRAMATO PENSA PHARMA 50 MG COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 18.31,
+    "TOPIRAMATO TECNIGEN 25 mg COMPRIMIDOS RECUBIERTOS CON PELICULA EFG": 9.16,
+}
+
+
 MAIN_DIR = Path(__file__).resolve().parent
 
 RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "HU-3.csv"
@@ -34,7 +60,7 @@ RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "HU-3.csv"
 
 RUTA_FECHAS = Path(MAIN_DIR).parent / "data" / "medicamentos_web_scrapping.xlsx"
 
-RUTA_EXPORT = Path(MAIN_DIR).parent / "data" / "HU4_EDA.csv"
+RUTA_EXPORT = Path(MAIN_DIR).parent / "data" / "HU4_EDA.xlsx"
 
 def leer_excel(ruta=RUTA_INPUT) -> DataFrame:
     ruta_input = Path(ruta)
@@ -93,11 +119,17 @@ def gestionar_nulos_precios(df:DataFrame) -> DataFrame:
 
     return df
 
+def nulos_precios_a_precios_reales(df:DataFrame):
+    for medicamento in PRECIOS_MEDICAMENTOS_NULOS:
+        df.loc[df["nombre"]==medicamento, "Precio venta al público con IVA"] = PRECIOS_MEDICAMENTOS_NULOS[medicamento]
+    return df
+
 def gestionar_nulos(df:DataFrame) -> DataFrame:
 
     df = gestionar_nulos_duracion(df)
     df = gestionar_nulos_estado(df)
-    df = gestionar_nulos_precios(df)
+    #df = gestionar_nulos_precios(df)
+    df = nulos_precios_a_precios_reales(df)
 
     return df
 
@@ -136,7 +168,7 @@ def validar_filas(df:DataFrame) -> DataFrame:
 def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     ruta_export = Path(ruta)
     ruta_export.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(ruta_export, index=False)
+    df.to_excel(ruta_export, index=False)
     print("Se ha realizado el EDA de medicamentos en data/HU4_EDA")
 
 

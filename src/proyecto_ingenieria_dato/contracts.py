@@ -1,3 +1,5 @@
+import pandas as pd
+
 from pydantic import Field, ConfigDict, BaseModel, field_validator
 from typing import Literal
 from datetime import datetime
@@ -55,10 +57,18 @@ class Medicamento(BaseModel):
         alias="Estado"
     )
 
-    precio_venta_al_público_con_iva: float = Field(
+    precio_venta_al_público_con_iva: None | float = Field(
         gt=0, alias="Precio venta al público con IVA", description="Precio de venta al público con IVA."
     )
 
     tratamiento_de_larga_duración: int = Field(
         ge=0, le=1, alias="Tratamiento de larga duración", description="Indica si es de larga duración."
     )
+
+    @field_validator('precio_venta_al_público_con_iva', mode="before")
+    @classmethod
+    def convertir_na_a_none(cls,value):
+        if pd.isna(value):
+            return None
+        else:
+            return value
