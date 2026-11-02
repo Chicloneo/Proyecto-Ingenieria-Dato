@@ -16,7 +16,7 @@ __pycache__/
 # --- Datos o configuraciones locales (Por seguridad/espacio) ---
 .env
 
-*.xlsx
+#*.xlsx
 *.json
 
 .DS_Store
@@ -26,3 +26,4 @@ Plantilla_Entregas_Sprints_MUIAAP.docx
 Enunciados/Propuesta_Proyecto_MUIAAp.pdf
 practica_examen/
 .tmp/
+.crossnote/
