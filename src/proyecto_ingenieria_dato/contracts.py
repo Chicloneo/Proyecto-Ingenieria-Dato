@@ -15,7 +15,8 @@ class Medicamento(BaseModel):
 
     labcomercializador: str = Field(min_length=1, description="Laboratorio comercializador.")
 
-    dosis: float = Field(gt=0, alias="dosis (mg)", description="Dosis en miligramos.")
+    dosis: float = Field(gt=0, alias="dosis (mg)", 
+                         description="Comprimidos: mg por cada comprimido. Solución: mg/ml. Inyectable: mg por vial")
 
     forma_farmaceutica_simplificada: Literal["COMPRIMIDO", "SOLUCIÓN", "PRODUCTO USO NASAL", "COMPRIMIDO BUCODISPERSABLE", \
                                              "COMPRIMIDO LIBERACION MODIFICADA", "CAPSULA", "INYECTABLE"] = Field(
