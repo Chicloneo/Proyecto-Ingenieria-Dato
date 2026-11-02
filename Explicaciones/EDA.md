@@ -2,7 +2,7 @@
 
 #### Gonzalo Carrasco, Santiago Lillo, Rafael Sánchez
 
-Data: `src/data/HU4_EDA.xlsx`. 70 medicamentos contra la migraña.
+Datos: `src/data/HU4_EDA.xlsx`. 70 medicamentos contra la migraña.
 
 ## Principio Activo
 

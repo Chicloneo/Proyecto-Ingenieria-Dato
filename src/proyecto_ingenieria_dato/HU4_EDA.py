@@ -23,7 +23,6 @@ COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "medicamento_huerfano", 
     "biosimilar", 
     "num_registros_atc", 
-    "num_excipientes",
     "Especial control médico"
 ]
 
@@ -124,12 +123,17 @@ def nulos_precios_a_precios_reales(df:DataFrame):
         df.loc[df["nombre"]==medicamento, "Precio venta al público con IVA"] = PRECIOS_MEDICAMENTOS_NULOS[medicamento]
     return df
 
+def gestionar_nulos_excipientes(df:DataFrame):
+    df["num_excipientes"] = df["num_excipientes"].fillna(0).astype(int)
+    return df
+
 def gestionar_nulos(df:DataFrame) -> DataFrame:
 
     df = gestionar_nulos_duracion(df)
     df = gestionar_nulos_estado(df)
     #df = gestionar_nulos_precios(df)
     df = nulos_precios_a_precios_reales(df)
+    df = gestionar_nulos_excipientes(df)
 
     return df
 

@@ -60,3 +60,7 @@ class Medicamento(BaseModel):
     )
 
     tratamiento_de_larga_duración: str = Literal["SI, NO"]
+
+    num_excipientes: int = Field(ge=0, 
+                                description="Número de sustancias que se añaden a un fármaco para darle cuerpo, forma, sabor "
+                                 + "o estabilidad, sin ningún efecto curativo por sí mismos")
