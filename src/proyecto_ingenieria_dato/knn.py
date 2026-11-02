@@ -122,5 +122,7 @@ def main():
             ("Indicador_Riesgo", "Precio venta al público con IVA")]
     show_combinations(X_norm, model, combinations)
 
+    save_model(MODEL_PATH / "knn.joblib", model)
+
 if __name__ == "__main__":
     main()
