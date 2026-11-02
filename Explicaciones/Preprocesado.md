@@ -52,6 +52,8 @@ Inicialmente, el dataset presenta 32 columnas. Eliminamos:
 
 - `Especial control médico`: había únicamente valores NO y nulos; no había medicamentos marcados con SI. Se ha supuesto que los nulos no necesitan especial control médico (si lo necesitaran deberían estar marcados), dando lugar a una columna constante.
 
+Por tanto, el dataset pasa a tener 20 columnas (serán más tras el Encoding de la clusterización).
+
 ## Normalizar strings
 
 En primer lugar se aplicó un `.str.strip()` a todas las columnas cuyo tipo sea string, para eliminar los esppacios al principio y al final de cada palabra.
