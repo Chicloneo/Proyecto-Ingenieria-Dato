@@ -95,45 +95,38 @@ La complejidad del desglose se refiere al número de tablas de la ficha técnica
 
 ![Comercialización según estado](graficas/comercializacion-segun-estado.png)
 
-54 de los 70 registros figuran de alta, frente a 13 de baja general, 2 de baja por no comercializarse y 1 con suspensión temporal general. Por tanto, en este conjunto predominan los medicamentos que constan como activos administrativamente. El gráfico no explica las causas de las bajas o de la suspensión; para ello habría que consultar la información administrativa de cada medicamento.
+- `ALTA`: Se puede recetar y comprar en las farmacias.
 
-## Distribución del precio de venta al público
+- `BAJA POR NO COMERCIALIZAR`: El laboratorio titular ha decidido dejar de venderlo. Sigue teniendo permiso legal para comercializarse, pero deja de ser rentable o es sustituido por por otra versión.
 
-![Distribución del precio de venta al público](graficas/distribucion-del-precio-de-venta-al-publico.png)
+- `BAJA GENERAL`: La Agencia Española de Medicamentos (AEMPS) ha retirado de forma definitiva el medicamento. Ya no existe administrativamente en el sistema de facturación o bien se le ha retirado la autorización de comercialización.
 
-Esta gráfica usa los 70 precios añadidos manualmente a partir de otras fuentes en `HU4_EDA.xlsx`. No hay precios ausentes en ese archivo; la mediana es 9,16 €, el rango intercuartílico va de 2,50 € a 19,53 € y el rango total es de 0,17 € a 73,25 €.
+- `SUSPENSION TEMPORAL GENERAL`: Hay una pausa temporal en la venta, debido a problemas puntuales en la fábrica, problemas de seguridas, o desabastecimientos, entre otros.
 
-## Frecuencia de los precios
+## Precio de venta
 
 ![Frecuencia de los precios](graficas/frecuencia-de-los-precios.png)
 
-El histograma representa los 70 precios incluidos en `HU4_EDA.xlsx`; no contiene valores imputados aleatoriamente. La línea discontinua marca la mediana (9,16 €). Los precios van de 0,17 € a 73,25 €.
+![Distribución del precio de venta al público](graficas/distribucion-del-precio-de-venta-al-publico.png)
+
+Se observa una notable diferencia entre la mediana (línea naranja) y la media (triángulo verde) debido al _outlier_ con valor de 73€. 
+
+Este es un valor atípico debido a la ausencia de medicamentos con precio entre 40€ y 70€.
 
 ## Tratamiento de larga duración
 
 ![Tratamiento de larga duración](graficas/tratamiento-de-larga-duracion.png)
 
-En los datos originales, 3 registros indican tratamiento de larga duración, 45 indican que no y 22 no tienen información. El procesamiento convirtió esos 22 valores ausentes en «NO», por lo que la gráfica muestra 3 «SÍ» y 67 «NO». El predominio de «NO» en la gráfica se debe en parte a esa imputación; no se puede concluir que los 67 casos sean realmente tratamientos no prolongados ni explicar por qué se indicó esa duración para cada medicamento.
 
-## Gráficas exploratorias para machine learning
-
-### Matriz de correlación
+## Matriz de correlación
 
 ![Matriz de correlación de variables numéricas](graficas/matriz-correlacion-ml.png)
 
-La matriz muestra correlaciones de Pearson entre las columnas numéricas, incluido el precio, los años de autorización y revisión y variables binarias como `comercializado`. Los precios se toman de `HU4_EDA.xlsx`: los 70 valores se añadieron manualmente a partir de otras fuentes y no hay valores ausentes. En esta muestra, el precio tiene su mayor correlación positiva con `afecta_conduccion` (r ≈ 0,55); esto solo indica asociación. La matriz sirve para explorar relaciones lineales y posibles predictores redundantes, no demuestra causalidad. Con solo 70 registros, los coeficientes deben interpretarse con cautela.
+A continuación se estudia la correlación entre la dosis y si afecta o no a la conducción, cuyo coeficiente de correlación de Pearson es de -0.67.
 
-### Afectación de la conducción y dosis
+### Conducción y dosis
 
 ![Dosis según efecto sobre la conducción](graficas/correlacion-conduccion-dosis.png)
 
-Como `afecta_conduccion` es binaria, se comparan las distribuciones de dosis de los grupos «No» y «Sí» con un diagrama de caja y los registros individuales. La correlación punto-biserial (equivalente a Pearson para una variable binaria) es aproximadamente −0,67 en esta muestra. Es una asociación, no evidencia de que la dosis cause el efecto sobre la conducción.
 
-
-
-```mermaid
-graph TD
-    A[Raw Data] --> B[Procesamiento HU4_EDA.py]
-    B --> C[Notebooks/graficas.ipynb]
-    C --> D[Guardar PNGs]
-```
+Que el valor del coeficiente sea negativo indicaría una relación inversa. Es decir, cuanto más afecta a la conducción, menos dosis tiene el medicamento. Sin embargo, como la variable de la conducción es categórica (Sí/No), la posible correlación debe interpretarse de la siguiente forma: los medicamentos que sí afectan a la conducción requieren una menor dosis. Una posible explicación sería que mayores dosis en dichos medicamentos afectarían gravemente a la percepción, los sentidos o la capacidad de reacción, imposibilitando totalmente la conducción.
