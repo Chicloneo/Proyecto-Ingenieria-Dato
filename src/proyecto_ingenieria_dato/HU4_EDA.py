@@ -23,7 +23,6 @@ COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "medicamento_huerfano", 
     "biosimilar", 
     "num_registros_atc", 
-    "num_excipientes",
     "Especial control médico"
 ]
 
@@ -148,6 +147,11 @@ def gestionar_dosis(df:DataFrame) -> DataFrame:
 
     df["dosis"] = df["dosis"].str.strip().str.split().str[0].str.replace(",", ".").astype(float)
     df = df.rename(columns={"dosis": "dosis (mg)"})
+
+    df.loc[df["nombre"]== "CAFERGOT 1 mg/100 mg COMPRIMIDOS", "dosis (mg)"] = 101.0
+    df.loc[df["nombre"]== "METOPROLOL KRKA RETARD 95 MG COMPRIMIDOS DE LIBERACION PROLONGADA EFG", "dosis (mg)"] = 95.0
+    df.loc[df["nombre"]== "PRIMPERAN 1mg /ml SOLUCION ORAL", "dosis (mg)"] = 1.0
+    df.loc[df["nombre"]== "PRIMPERAN 10 mg /2 ml SOLUCION INYECTABLE", "dosis (mg)"] = 5.0
 
     return df
 
