@@ -35,6 +35,8 @@ La escasez en las vías nasales e intramusculares podría deberse a que estas re
 
 En este conjunto de datos no hay fechas de autorización posteriores a 2016. Además, solo 19 registros tienen una fecha de revisión original (todas entre 2021 y 2026), y el resto son valores nulos sustituidos por so fecha de autorización. 
 
+Se observa que los datos consideran principalmente ,medicamentos autorizados a partir de 1996.
+
 No se informa del resultado de cada revisión: si el medicamento se mantuvo, se retiró o cambió de estado.
 
 ## Comercialización
@@ -130,3 +132,9 @@ A continuación se estudia la correlación entre la dosis y si afecta o no a la 
 
 
 Que el valor del coeficiente sea negativo indicaría una relación inversa. Es decir, cuanto más afecta a la conducción, menos dosis tiene el medicamento. Sin embargo, como la variable de la conducción es categórica (Sí/No), la posible correlación debe interpretarse de la siguiente forma: los medicamentos que sí afectan a la conducción requieren una menor dosis. Una posible explicación sería que mayores dosis en dichos medicamentos afectarían gravemente a la percepción, los sentidos o la capacidad de reacción, imposibilitando totalmente la conducción.
+
+### Precio y año de autorización
+
+![Correlación entre precio y año de autorización](graficas/correlacion-precio-autorizacion.png)
+
+Pese a que el coeficiente de correlación de estas variables sea de 0.66, no se observa ninguna correlación evidente entre ambas. El bajo coste de los medicamentos autorizados en los años 60, así como la gran cantidad de medicamentos autorizados en los 2000, explican que este coeficiente tenga un valor elevado.
