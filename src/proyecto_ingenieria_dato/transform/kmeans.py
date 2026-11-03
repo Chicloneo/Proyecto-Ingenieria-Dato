@@ -196,7 +196,7 @@ def main():
 
     save_model(MODEL_PATH / "knn.joblib", model)
     df_cluster = add_cluster_column(model)
-    df_cluster.to_csv(DATA_PATH / "datos_clusterizados.csv", index=False)
+    df_cluster.to_csv(DATA_PATH / "datos_clusterizados.csv", index=False, sep=';')
 
     print(f"KNN realizado. Resultados en {IMG_PATH}\n Datos en {DATA_PATH}")
 
