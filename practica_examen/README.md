@@ -1,1 +1,0 @@
-Material de apoyo de Rodrigo Arbones sobre cómo realizar HU-1, HU-2, HU-3

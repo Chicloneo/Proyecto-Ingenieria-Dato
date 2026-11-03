@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
 from pathlib import Path
 
-PATH = Path(__file__).parents[2].resolve()
+PATH = Path(__file__).parents[3].resolve()
 
 DATA_PATH =  PATH / "data"
 MODEL_PATH = PATH / "models"
@@ -159,11 +159,18 @@ def show_combinations(X, model, combinations: List[(str, str)]) -> None:
 def save_model(path, model) -> None:
     joblib.dump(model, path)
 
+def add_cluster_column(model) -> pd.DataFrame:
+    '''Añade el cluster a los datos originales y devuelve el dataframe'''
+
+    df = pd.read_excel(DATA_PATH / "datos_validados.xlsx")
+    df["cluster"] = model.labels_
+    return df
+
 def main():
     MODEL_PATH.mkdir(exist_ok=True)
     IMG_PATH.mkdir(exist_ok=True)
 
-    df = pd.read_excel(DATA_PATH / "HU4_EDA.xlsx")
+    df = pd.read_excel(DATA_PATH / "datos_validados.xlsx")
     df.drop(columns="nombre", inplace=True)
     df = encode(df)
 
@@ -188,8 +195,10 @@ def main():
     show_combinations(X_norm, model, combinations)
 
     save_model(MODEL_PATH / "knn.joblib", model)
+    df_cluster = add_cluster_column(model)
+    df_cluster.to_csv(DATA_PATH / "datos_clusterizados.csv", index=False)
 
-    print(f"KNN realizado. Resultados en {IMG_PATH}")
+    print(f"KNN realizado. Resultados en {IMG_PATH}\n Datos en {DATA_PATH}")
 
 if __name__ == "__main__":
     main()

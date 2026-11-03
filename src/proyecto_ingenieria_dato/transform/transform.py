@@ -9,7 +9,7 @@ from pandas import DataFrame
 from pathlib import Path
 import numpy as np
 import sys
-from .contracts import Medicamento
+from contracts import Medicamento
 
 COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "nregistro", 
@@ -52,21 +52,17 @@ PRECIOS_MEDICAMENTOS_NULOS = {
 }
 
 
-MAIN_DIR = Path(__file__).resolve().parent
+DATA_PATH = Path(__file__).parents[3].resolve() / "data"
 
-RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "HU-3.csv"
-#RUTA_INPUT = Path(MAIN_DIR).parent / "data" / "catalogo_enriquecido.xlsx"
-
-RUTA_FECHAS = Path(MAIN_DIR).parent / "data" / "medicamentos_web_scrapping.xlsx"
-
-RUTA_EXPORT = Path(MAIN_DIR).parent / "data" / "HU4_EDA.xlsx"
+RUTA_INPUT = DATA_PATH / "catalogo_enriquecido.xlsx"
+RUTA_EXPORT = DATA_PATH / "datos_validados.xlsx"
 
 def leer_excel(ruta=RUTA_INPUT) -> DataFrame:
     ruta_input = Path(ruta)
     if not ruta_input.exists():
         raise FileNotFoundError(f"No se encontró la ruta '{ruta}'")
     
-    df = pd.read_csv(ruta_input, index_col = False)
+    df = pd.read_excel(ruta_input, index_col = False)
     return df
 
 def eliminar_columnas(df:DataFrame) -> DataFrame:
@@ -178,7 +174,7 @@ def exportar_df(df:DataFrame, ruta = RUTA_EXPORT):
     ruta_export = Path(ruta)
     ruta_export.parent.mkdir(parents=True, exist_ok=True)
     df.to_excel(ruta_export, index=False)
-    print("Se ha realizado el EDA de medicamentos en data/HU4_EDA")
+    print(f"Se han guardado los datos validados: {RUTA_EXPORT}")
 
 
 
@@ -197,7 +193,6 @@ def main(ruta=RUTA_INPUT):
     except ValueError as e: #porque hemos raiseado un ValueError
         print(e, file=sys.stderr) 
         return 2
-
     exportar_df(df)
     
     
