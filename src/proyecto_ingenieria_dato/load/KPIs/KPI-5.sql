@@ -1,5 +1,4 @@
-use MUIAAp_2026;
-
+-- Ranking de precios por grupo
 SELECT 
     nombre, forma_farmaceutica, precio_venta_publico_iva,
     DENSE_RANK() OVER ( -- Precios empatados comparten posición
