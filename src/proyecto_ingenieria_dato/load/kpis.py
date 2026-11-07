@@ -38,7 +38,7 @@ def get_query(path: Path) -> str:
     return query
 
 def execute_kpi(kpi_name: str, query: str) -> None:
-    ''' Executes the given query and prints the results including the KPI name'''
+    ''' Executes the given query'''
 
     conn = None
     cursor = None
@@ -48,12 +48,9 @@ def execute_kpi(kpi_name: str, query: str) -> None:
         cursor = conn.cursor()
 
         cursor.execute(query)
+        conn.commit()
 
-        results = cursor.fetchall()
-
-        print(f"|----- KPI: {kpi_name} -----|")
-        for row in results:
-            print(*row, sep=" | ")
+        print(f"Executed: {kpi_name}")
 
     except Exception:
         if conn is not None and conn.is_connected():
@@ -69,10 +66,10 @@ def execute_kpi(kpi_name: str, query: str) -> None:
 
 def main():
     kpis_files = get_kpis_paths(KPIS_PATH)
+    print(f"|----- Executing queries in: {KPIS_PATH} -----|")
     for kpi_path in kpis_files:
         query = get_query(kpi_path)
         execute_kpi(kpi_path, query)
-        print("\n")
 
 if __name__ == "__main__":
     main()
