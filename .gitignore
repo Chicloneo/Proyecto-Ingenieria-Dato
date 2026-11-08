@@ -29,3 +29,4 @@ Enunciados/
 practica_examen/
 .tmp/
 Notebooks/pruebas.ipynb
+.env
