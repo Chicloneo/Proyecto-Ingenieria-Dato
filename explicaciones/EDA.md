@@ -53,7 +53,11 @@ Un medicamento genérico es aquel que tiene el mismo componente activo, segurida
 
 ![Precio según si el medicamento es genérico](graficas/correlacion-precio-generico.png)
 
-En este caso, no se observa ninguna relación entre los medicamentos genéricos y un precio menor. Los medicamentos no genéricos podrían seguir una distribución en el precio similar (o incluso menor) a los genéricos.
+Este gráfico muestra la distribución del precio dentro de cada clase; según si es genérico o no. 
+
+
+> [!TIP]
+> **¡Ojo!** El gráfico no indica que los medicamentos genéricos sean más caros (cosa que parece contraintuitiva). El precio depende mucho de los principios activos. Por ejemplo, para medicamentos que tienen TOPIRAMATO, hay 27 genéricos y ninguno de marca. Casualmente, muchos de ellos tienen un precio elevado (hasta 73€), pero no podemos compararlos con otros medicamentos que tienen un principio activo distinto.
 
 ## Efecto en la conducción
 
