@@ -21,7 +21,7 @@ SELECT principios_activos, COUNT(CASE WHEN generico THEN principios_activos END)
     COUNT(CASE WHEN NOT generico THEN principios_activos END) AS num_no_generico, 
     AVG(CASE WHEN generico THEN precio_venta_publico_iva END) AS media_precios_genericos,
     AVG(CASE WHEN NOT generico THEN precio_venta_publico_iva END) AS media_precios_no_genericos
-FROM medicamentos_clusterizados
+FROM medicamentos
 GROUP BY principios_activos
 ) 
 
