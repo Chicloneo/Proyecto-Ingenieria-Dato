@@ -1,4 +1,4 @@
-import kmeans, transform
+from transform import kmeans, transform
 
 def main():
     transform.main()
