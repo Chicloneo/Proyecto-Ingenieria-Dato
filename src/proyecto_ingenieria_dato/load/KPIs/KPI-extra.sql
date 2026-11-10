@@ -43,9 +43,3 @@ SELECT principios_activos,
         0),
         2) AS tasa_fiabilidad
 FROM calculo_medias;
-
--- SELECT precio_gen - precio_marca
---FROM (SELECT
---...) -- aquí calculo precio_gen, precio_marca
-
---GROUP BY principios_activos, generico

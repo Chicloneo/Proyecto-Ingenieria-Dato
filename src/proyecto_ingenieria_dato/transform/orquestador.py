@@ -1,4 +1,4 @@
-from transform import kmeans, transform
+from proyecto_ingenieria_dato.transform import kmeans, transform
 
 def main():
     transform.main()

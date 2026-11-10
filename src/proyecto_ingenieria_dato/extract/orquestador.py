@@ -1,4 +1,4 @@
-from extract import extraer_medicamentos, preparar_dataset_medicamentos, web_scrapping, enriquecer_catalogo
+from proyecto_ingenieria_dato.extract import extraer_medicamentos, preparar_dataset_medicamentos, web_scrapping, enriquecer_catalogo
 
 # uv run orquestador.py
 def main():

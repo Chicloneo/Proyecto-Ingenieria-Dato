@@ -1,4 +1,4 @@
-from load import load, kpis
+from proyecto_ingenieria_dato.load import load, kpis
 
 def main():
     load.main()

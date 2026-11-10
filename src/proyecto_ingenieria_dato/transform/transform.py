@@ -9,7 +9,7 @@ from pandas import DataFrame
 from pathlib import Path
 import numpy as np
 import sys
-from transform.contracts import Medicamento
+from proyecto_ingenieria_dato.transform.contracts import Medicamento
 
 COLUMNAS_A_ELIMINAR = columnas_a_eliminar = [
     "nregistro", 
