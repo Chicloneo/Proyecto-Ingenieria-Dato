@@ -12,7 +12,7 @@ TABLE_NAME = "medicamentos"
 
 load_dotenv()
 CONN_CONFIG = {
-    "host": "localhost",
+    "host": "db",
     "port": 3306,
     "user": os.getenv("SQL_USER"),
     "password": os.getenv("SQL_PASSWORD"),

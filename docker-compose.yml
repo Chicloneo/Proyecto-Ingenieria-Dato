@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SQL_PASSWORD}
+      MYSQL_DATABASE: MUIAAp_2026
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    # Check if database is active
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./images:/app/images
+      - ./models:/app/models
+      - ./logs:/app/logs
+    depends_on:
+      db:
+        # Wait for db to be active
+        condition: service_healthy
+
+volumes:
+  mysql_data:
