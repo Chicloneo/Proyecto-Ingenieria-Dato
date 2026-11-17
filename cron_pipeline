@@ -1,1 +1,1 @@
-* * * * * root . /app/container.env && cd /app && /bin/uv run --no-sync python src/proyecto_ingenieria_dato/LosCaballas_migraña.py
+0 0 * * * root . /app/container.env && cd /app && /bin/uv run --no-sync python src/proyecto_ingenieria_dato/LosCaballas_migraña.py
