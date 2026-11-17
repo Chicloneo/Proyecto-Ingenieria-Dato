@@ -85,7 +85,8 @@ def get_create_table_query() -> str:
         estado VARCHAR(100) NOT NULL,
         precio_venta_publico_iva DECIMAL(10, 2) NOT NULL,
         tratamiento_larga_duracion TINYINT NOT NULL,
-        cluster INT NOT NULL
+        cluster INT NOT NULL,
+        fecha_insercion DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     """
     return create_table_sql
@@ -108,19 +109,25 @@ def load_to_mysql(df: pd.DataFrame, create: str, insert: str, rows: list[tuple])
     conn = None
     cursor = None
     try:
+        # Connect
         conn = mysql.connector.connect(**CONN_CONFIG)
         cursor = conn.cursor()
         cursor.execute(create)
-        cursor.execute(f"DELETE FROM {TABLE_NAME}")
+
+        # Check database before insert
+        cursor.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}")
+        count_before_insert = cursor.fetchone()[0]
+
         cursor.executemany(insert, rows)
 
+        # Check database after insert
         cursor.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}")
-        sql_count = cursor.fetchone()[0]
-        if sql_count != len(df):
-            raise ValueError(f"El recuento no coincide: SQL={sql_count}, CSV={len(df)}")
+        count_after_insert = cursor.fetchone()[0]
+        if (count_after_insert - count_before_insert) != len(df):
+            raise ValueError(f"El recuento no coincide: SQL={count_after_insert - count_before_insert}, CSV={len(df)}")
 
         conn.commit()
-        print(f"Carga confirmada: {sql_count} filas en {CONN_CONFIG['database']}.{TABLE_NAME}")
+        print(f"Carga confirmada: {count_after_insert - count_before_insert} filas en {CONN_CONFIG['database']}.{TABLE_NAME}")
     except Exception:
         if conn is not None and conn.is_connected():
             conn.rollback()
