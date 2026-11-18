@@ -39,6 +39,8 @@ Compose construye la imagen de la aplicación, levanta MySQL y espera a que la
 base de datos esté disponible antes de iniciar la aplicación. Esta última
 arranca cron, que ejecuta el pipeline completo **una vez por minuto**.
 
+`--build -d` construye la imagen por primera vez (por ejemplo, si se han hecho cambios).
+
 Comandos útiles:
 
 ```bash
