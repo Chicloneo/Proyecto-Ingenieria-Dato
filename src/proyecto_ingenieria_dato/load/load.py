@@ -6,7 +6,9 @@ from mysql.connector.abstracts import MySQLCursorAbstract
 from pathlib import Path
 from dotenv import load_dotenv
 
-DATA_PATH = Path(__file__).parents[3].resolve() / "data/datos_clusterizados.csv"
+DATA_DIR = Path(__file__).parents[3].resolve() / "data"
+CLUSTER_DATA_PATH = DATA_DIR / "datos_clusterizados.csv"
+FULL_DATA_PATH = DATA_DIR / "catalogo_enriquecido.xlsx"
 
 TABLE_NAME = "medicamentos"
 
@@ -30,6 +32,22 @@ def read_data(path: Path) -> pd.DataFrame:
 
     df = pd.read_csv(path, sep=";", encoding="utf-8")
     return df
+
+def add_image_urls(df: pd.DataFrame, urls_data_path: Path = FULL_DATA_PATH) -> pd.DataFrame:
+    '''Adds the images urls from the path specified into the clusters dataframe'''
+
+    df_images_urls = pd.read_excel(urls_data_path)
+    columns_add = ["nombre", "url_foto_materiales"]
+
+    final_df = pd.merge(
+        df,
+        df_images_urls[columns_add],
+        on="nombre",
+        how="left",  # Keep data from the clusters dataframe
+    )
+    return final_df
+
+
 
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     '''Returns a copy dataframe with column names adapted to sql standards'''
@@ -56,6 +74,7 @@ def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
         "Precio venta al público con IVA": "precio_venta_publico_iva",
         "Tratamiento de larga duración": "tratamiento_larga_duracion",
         "cluster": "cluster",
+        "url_foto_materiales": "url_imagen",
     }
 
     df_load = df.rename(columns=column_mapping).copy()
@@ -86,6 +105,7 @@ def get_create_table_query() -> str:
         precio_venta_publico_iva DECIMAL(10, 2) NOT NULL,
         tratamiento_larga_duracion TINYINT NOT NULL,
         cluster INT NOT NULL,
+        url_imagen VARCHAR(255),
         fecha_insercion DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     """
@@ -139,7 +159,8 @@ def load_to_mysql(df: pd.DataFrame, create: str, insert: str, rows: list[tuple])
             conn.close()
 
 def main():
-    df = read_data(DATA_PATH)
+    df = read_data(CLUSTER_DATA_PATH)
+    df = add_image_urls(df, FULL_DATA_PATH)
     df = rename_columns(df)
 
     create_query = get_create_table_query()
