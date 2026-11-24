@@ -17,6 +17,8 @@ DATA_PATH =  PATH / "data"
 MODEL_PATH = PATH / "models"
 IMG_PATH = PATH / "images"
 
+N_CLUSTERS = 5
+
 def encode(df:pd.DataFrame) -> pd.DataFrame:
     """
     'pactivos'  #Opción A: TOPIRAMATO, IBUPROFENO, y todo lo demás
@@ -129,7 +131,7 @@ def show_first_columns(X, model) -> None:
         s=40
     )
 
-    plt.title('Visualización de los 9 clusters mediante PCA')
+    plt.title(f'Visualización de los {N_CLUSTERS} clusters mediante PCA')
     plt.xlabel('Componente principal 1')
     plt.ylabel('Componente principal 2')
     plt.legend(title='Cluster')
@@ -149,7 +151,7 @@ def show_combinations(X, model, combinations: List[(str, str)]) -> None:
             s=40
         )
 
-        plt.title('Visualización de los 9 clusters mediante dos variables')
+        plt.title(f'Visualización de los {N_CLUSTERS} clusters mediante dos variables')
         plt.xlabel(column_x)
         plt.ylabel(column_y)
         plt.legend(title='Cluster')
@@ -179,7 +181,7 @@ def main():
 
     elbow_method(X_norm)
 
-    model = KMeans(n_clusters = 9, random_state = 42, n_init='auto').fit(X_norm)
+    model = KMeans(n_clusters = N_CLUSTERS, random_state = 42, n_init='auto').fit(X_norm)
     X_norm = pd.DataFrame(X_norm, columns=df.columns) # Crear df de nuevo para facilitar el uso de los datos  
 
     pca = PCA(n_components=2)
@@ -199,6 +201,10 @@ def main():
     df_cluster.to_csv(DATA_PATH / "datos_clusterizados.csv", index=False, sep=';')
 
     print(f"KNN realizado. Resultados en {IMG_PATH}\n Datos en {DATA_PATH}")
+
+    print(f"Número de clusters: {N_CLUSTERS}")
+    print("Medicamentos por cluster: ")
+    print(df_cluster["cluster"].value_counts())
 
 if __name__ == "__main__":
     main()
